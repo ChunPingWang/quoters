@@ -1,15 +1,27 @@
 pipeline {
   agent none
   stages {
-    stage('build') {
+    stage('clone') {
+      steps {
+        sh 'git clone git@github.com:ChunPingWang/quoters.git'
+      }
+    }
+
+    stage('build ') {
       steps {
         sh 'mvn clean package'
       }
     }
 
-    stage('push') {
+    stage('build image') {
       steps {
         sh 'mvnw spring-boot:build-image  -Dspring-boot.build-image.imageName=cpingwang/quoters'
+      }
+    }
+
+    stage('push') {
+      steps {
+        sh 'docker push cpingwang/quoters'
       }
     }
 
