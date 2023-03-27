@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Git') {
       steps {
-        git(url: 'https://github.com/ChunPingWang/quoters', branch: 'main', poll: true)
+        sh 'git clone git@github.com:ChunPingWang/quoters.git'
       }
     }
 
