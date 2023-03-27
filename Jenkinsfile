@@ -1,12 +1,6 @@
 pipeline {
   agent none
   stages {
-    stage('clone') {
-      steps {
-        sh 'git clone git@github.com:ChunPingWang/quoters.git'
-      }
-    }
-
     stage('build ') {
       steps {
         sh 'mvn clean package'
