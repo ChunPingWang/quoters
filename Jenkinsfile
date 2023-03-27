@@ -1,21 +1,34 @@
 pipeline {
   agent none
   stages {
-    stage('build ') {
+    stage('Git') {
       steps {
-        sh 'mvn clean package'
+        git(url: 'https://github.com/ChunPingWang/quoters', branch: 'main', poll: true)
       }
     }
 
-    stage('build image') {
+    stage('compile') {
       steps {
-        sh 'mvnw spring-boot:build-image  -Dspring-boot.build-image.imageName=cpingwang/quoters'
+        sh './mvnw clean package'
       }
     }
 
-    stage('push') {
+    stage('build-image') {
+      steps {
+        sh '''./mvnw spring-boot:build-image  -Dspring-boot.build-image.imageName=cpingwang/quoters
+'''
+      }
+    }
+
+    stage('push-image') {
       steps {
         sh 'docker push cpingwang/quoters'
+      }
+    }
+
+    stage('deploy') {
+      steps {
+        sh 'kubectl apply -f deploy.yml'
       }
     }
 
