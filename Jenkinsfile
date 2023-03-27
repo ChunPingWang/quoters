@@ -1,23 +1,15 @@
 pipeline {
   agent none
   stages {
-    stage('build-and-deploy') {
-      agent {
-        docker {
-          image 'springci/slackboot:latest'
-          args '-v $HOME/.m2:/tmp/jenkins-home/.m2'
-        }
-
-      }
-      environment {
-        PWS = credentials('pcfone-builds_at_springframework.org')
-      }
-      options {
-        timeout(time: 30, unit: 'MINUTES')
-      }
+    stage('build') {
       steps {
-        sh 'MAVEN_OPTS="-Duser.name=jenkins -Duser.home=/tmp/jenkins-home" ./mvnw clean package'
         sh 'mvn clean package'
+      }
+    }
+
+    stage('push') {
+      steps {
+        sh 'mvnw spring-boot:build-image  -Dspring-boot.build-image.imageName=cpingwang/quoters'
       }
     }
 
